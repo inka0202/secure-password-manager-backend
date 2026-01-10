@@ -22,6 +22,7 @@ app.use('/api/passwords', passwordManagerRoutes);
 app.use('/api/admin', adminRoutes); 
 app.use(cors({
   origin: [ 
+    "https://password-manager-secure.vercel.app",
     "http://localhost:3000"                  
   ],
   credentials: true
