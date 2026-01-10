@@ -21,7 +21,7 @@ const transporter = nodemailer.createTransport({
 const sendSecurityAlertEmail = async (email) => {
   try {
     await transporter.sendMail({
-      from: `"Giggle Password Manager" <${process.env.EMAIL_USER}>`,
+      from: `"Secure Password Manager" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Security Alert: Failed Login Attempts',
       text: `We've detected 5 failed login attempts on your account. If this wasn't you, please consider changing your password or contacting support.`,
@@ -173,7 +173,7 @@ router.post('/forgot-password', async (req, res) => {
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
     await transporter.sendMail({
-      from: `"Giggle Password Manager" <${process.env.EMAIL_USER}>`,
+      from: `"Secure Password Manager" <${process.env.EMAIL_USER}>`,
       to: email,
       subject: 'Reset Your Password',
       text: `Click this link to reset your password: ${resetUrl}\nThis link is valid for 15 minutes.`,

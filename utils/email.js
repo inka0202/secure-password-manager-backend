@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
 
 const send2FACode = (to, code) => {
   return transporter.sendMail({
-    from: `"Giggle Password Manager" <${process.env.EMAIL_USER}>`,
+    from: `"Secure Password Manager" <${process.env.EMAIL_USER}>`,
     to,
     subject: 'Your 2FA Code',
     text: `Your code is: ${code}`,

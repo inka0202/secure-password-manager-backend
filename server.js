@@ -21,8 +21,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/passwords', passwordManagerRoutes);
 app.use('/api/admin', adminRoutes); 
 app.use(cors({
-  origin: [
-    "https://giggle-password-manager.vercel.app", 
+  origin: [ 
     "http://localhost:3000"                  
   ],
   credentials: true
