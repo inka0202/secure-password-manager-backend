@@ -2,34 +2,17 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-const send2FACode = require('../utils/email');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
-const nodemailer = require('nodemailer');
+
+const {
+  send2FACode,
+  sendSecurityAlertEmail,
+  sendResetPasswordEmail
+} = require('../utils/email');
 
 require('dotenv').config();
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
-
-// 📧 Sends security alert after 5 failed login attempts
-const sendSecurityAlertEmail = async (email) => {
-  try {
-    await transporter.sendMail({
-      from: `"Secure Password Manager" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'Security Alert: Failed Login Attempts',
-      text: `We've detected 5 failed login attempts on your account. If this wasn't you, please consider changing your password or contacting support.`,
-    });
-  } catch (err) {
-    console.error('Failed to send security alert email:', err);
-  }
-};
 
 // 🧾 Register a new user
 router.post('/register', async (req, res) => {
@@ -172,13 +155,7 @@ router.post('/forgot-password', async (req, res) => {
     await user.save();
 
     const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${token}`;
-    await transporter.sendMail({
-      from: `"Secure Password Manager" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: 'Reset Your Password',
-      text: `Click this link to reset your password: ${resetUrl}\nThis link is valid for 15 minutes.`,
-    });
-
+    await sendResetPasswordEmail(user.email, resetUrl);
     res.json({ message: 'If this email is registered, a reset link will be sent.' });
   } catch (err) {
     console.error('Forgot password error:', err);
